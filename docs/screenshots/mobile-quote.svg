@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600" viewBox="0 0 300 600">
-  <rect width="300" height="600" fill="#f3f4f6" rx="20"/>
-  <rect x="20" y="60" width="260" height="520" fill="#ffffff" rx="16" stroke="#e5e7eb" stroke-width="2"/>
-  <rect x="40" y="80" width="220" height="24" rx="6" fill="#2563eb"/>
-  <rect x="40" y="120" width="220" height="80" rx="10" fill="#f9fafb" stroke="#e5e7eb"/>
-  <rect x="40" y="220" width="220" height="120" rx="10" fill="#f9fafb" stroke="#e5e7eb"/>
-  <rect x="40" y="360" width="220" height="80" rx="10" fill="#f9fafb" stroke="#e5e7eb"/>
-  <text x="150" y="500" text-anchor="middle" font-family="Arial" font-size="14" fill="#9ca3af">Vista movil - Cotizar</text>
-</svg>

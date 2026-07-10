@@ -88,11 +88,11 @@ La aplicación está diseñada para adaptarse a cualquier moneda, impuesto, idio
 
 | Vista móvil - Cotizar | Vista móvil - Configuración | Vista previa PDF |
 |:---:|:---:|:---:|
-| ![Cotizar](https://placehold.co/300x600/f3f4f6/6b7280?text=Vista+m%C3%B3vil+-+Cotizar) | ![Configuración](https://placehold.co/300x600/f3f4f6/6b7280?text=Vista+m%C3%B3vil+-+Configuraci%C3%B3n) | ![PDF](https://placehold.co/424x600/e5e7eb/6b7280?text=Vista+previa+PDF) |
+| ![Cotizar](docs/screenshots/mobile-quote.png) | ![Configuración](docs/screenshots/mobile-config.png) | ![PDF](docs/screenshots/pdf-preview.png) |
 
 | Escritorio - Split view | Modal de clientes | Estilo Liquid Glass |
 |:---:|:---:|:---:|
-| ![Escritorio](https://placehold.co/600x350/f3f4f6/6b7280?text=Escritorio+-+Split+view) | ![Clientes](https://placehold.co/400x300/f3f4f6/6b7280?text=Modal+de+clientes) | ![Liquid Glass](https://placehold.co/424x600/e0f2fe/4f46e5?text=Estilo+Liquid+Glass) |
+| ![Escritorio](docs/screenshots/desktop-split.png) | ![Clientes](docs/screenshots/modal-clients.png) | ![Liquid Glass](docs/screenshots/style-liquid-glass.png) |
 
 </div>
 
