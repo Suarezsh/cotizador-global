@@ -12,9 +12,6 @@ const AdminPanel = {
   },
 
   bindEvents() {
-    document.getElementById('tab-admin').addEventListener('click', () => App.setTab('admin'));
-    document.getElementById('btn-tab-admin').addEventListener('click', () => App.setTab('admin'));
-
     const businessIds = {
       'admin-business-name': 'business.name',
       'admin-slogan': 'business.slogan',
@@ -125,13 +122,17 @@ const AdminPanel = {
   renderClients() {
     const list = document.getElementById('clients-list');
     list.innerHTML = AppState.clients.map(c => `
-      <li class="flex justify-between items-center bg-gray-50 p-2 rounded text-sm">
-        <span>${c.name}</span>
-        <button data-id="${c.id}" class="text-red-500 hover:text-red-700 btn-remove-client">×</button>
+      <li class="flex justify-between items-center bg-gray-50 p-2 rounded-lg text-sm border border-gray-100">
+        <span class="font-medium text-gray-700">${c.name}</span>
+        <button data-id="${c.id}" class="text-red-500 hover:text-red-700 hover:bg-red-50 p-1.5 rounded-md transition btn-remove-client">
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
       </li>
     `).join('');
     list.querySelectorAll('.btn-remove-client').forEach(btn => {
-      btn.addEventListener('click', () => AppState.removeClient(btn.dataset.id));
+      btn.addEventListener('click', () => {
+        App.showConfirm('¿Eliminar este cliente?', () => AppState.removeClient(btn.dataset.id));
+      });
     });
   },
 
@@ -154,13 +155,17 @@ const AdminPanel = {
   renderCurrencies() {
     const list = document.getElementById('currencies-list');
     list.innerHTML = AppState.currencies.map(c => `
-      <li class="flex justify-between items-center bg-gray-50 p-2 rounded text-sm">
-        <span>${c.name} (${c.symbol}) ${c.default ? '✓' : ''}</span>
-        <button data-id="${c.id}" class="text-red-500 hover:text-red-700 btn-remove-currency">×</button>
+      <li class="flex justify-between items-center bg-gray-50 p-2 rounded-lg text-sm border border-gray-100">
+        <span class="font-medium text-gray-700">${c.name} (${c.symbol}) ${c.default ? '<i class="fa-solid fa-check text-green-600 ml-1"></i>' : ''}</span>
+        <button data-id="${c.id}" class="text-red-500 hover:text-red-700 hover:bg-red-50 p-1.5 rounded-md transition btn-remove-currency">
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
       </li>
     `).join('');
     list.querySelectorAll('.btn-remove-currency').forEach(btn => {
-      btn.addEventListener('click', () => AppState.removeCurrency(btn.dataset.id));
+      btn.addEventListener('click', () => {
+        App.showConfirm('¿Eliminar esta moneda?', () => AppState.removeCurrency(btn.dataset.id));
+      });
     });
   },
 
@@ -181,13 +186,17 @@ const AdminPanel = {
   renderTaxes() {
     const list = document.getElementById('taxes-list');
     list.innerHTML = AppState.taxes.map(t => `
-      <li class="flex justify-between items-center bg-gray-50 p-2 rounded text-sm">
-        <span>${t.name} ${t.rate}% ${t.default ? '✓' : ''}</span>
-        <button data-id="${t.id}" class="text-red-500 hover:text-red-700 btn-remove-tax">×</button>
+      <li class="flex justify-between items-center bg-gray-50 p-2 rounded-lg text-sm border border-gray-100">
+        <span class="font-medium text-gray-700">${t.name} ${t.rate}% ${t.default ? '<i class="fa-solid fa-check text-green-600 ml-1"></i>' : ''}</span>
+        <button data-id="${t.id}" class="text-red-500 hover:text-red-700 hover:bg-red-50 p-1.5 rounded-md transition btn-remove-tax">
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
       </li>
     `).join('');
     list.querySelectorAll('.btn-remove-tax').forEach(btn => {
-      btn.addEventListener('click', () => AppState.removeTax(btn.dataset.id));
+      btn.addEventListener('click', () => {
+        App.showConfirm('¿Eliminar este impuesto?', () => AppState.removeTax(btn.dataset.id));
+      });
     });
   }
 };

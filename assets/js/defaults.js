@@ -79,8 +79,8 @@ function getDefaultQuote() {
     dueDate: due.toISOString().split('T')[0],
     clientId: 'c1',
     items: [
-      { id: 'i1', description: 'Servicio profesional de consultoría', type: 'service', unit: 'hora', quantity: 10, price: 150, discount: 0 },
-      { id: 'i2', description: 'Producto de ejemplo', type: 'product', unit: 'unidad', quantity: 2, price: 300, discount: 10 }
+      { id: 'i1', description: 'Servicio profesional de consultoría', type: 'service', unit: 'hora', quantity: 10, price: 150, discount: 0, taxable: true },
+      { id: 'i2', description: 'Producto de ejemplo', type: 'product', unit: 'unidad', quantity: 2, price: 300, discount: 10, taxable: true }
     ],
     globalDiscount: 0,
     advance: 0,

@@ -161,6 +161,12 @@ const AppState = {
     }
   },
 
+  removeSavedQuote(savedId) {
+    this.savedQuotes = this.savedQuotes.filter(q => q.savedId !== savedId);
+    this.persist();
+    this.notify();
+  },
+
   duplicateCurrentQuote() {
     const copy = JSON.parse(JSON.stringify(this.currentQuote));
     copy.number = this.settings.docPrefix + (this.savedQuotes.length + 2).toString().padStart(3, '0');

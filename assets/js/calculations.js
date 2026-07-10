@@ -10,7 +10,12 @@ const Calculations = {
 
   calculateQuote(quote, taxes) {
     const items = quote.items || [];
-    const subtotal = items.reduce((sum, item) => sum + this.itemTotal(item), 0);
+    const taxableItems = items.filter(item => item.taxable !== false);
+    const exemptItems = items.filter(item => item.taxable === false);
+
+    const taxableSubtotal = taxableItems.reduce((sum, item) => sum + this.itemTotal(item), 0);
+    const exemptSubtotal = exemptItems.reduce((sum, item) => sum + this.itemTotal(item), 0);
+    const subtotal = taxableSubtotal + exemptSubtotal;
 
     const globalDiscountRate = Number(quote.globalDiscount) || 0;
     const globalDiscount = globalDiscountRate > 0 && globalDiscountRate < 100
@@ -19,29 +24,35 @@ const Calculations = {
 
     const netSubtotal = subtotal - globalDiscount;
 
+    // Distribuir descuento global proporcionalmente entre gravado y exento
+    const taxableRatio = subtotal > 0 ? taxableSubtotal / subtotal : 0;
+    const netTaxableSubtotal = taxableSubtotal - (globalDiscount * taxableRatio);
+
     const taxDetails = taxes.map(tax => {
       const rate = Number(tax.rate) || 0;
       let amount = 0;
       if (tax.mode === 'included') {
-        amount = netSubtotal - (netSubtotal / (1 + rate / 100));
+        amount = netTaxableSubtotal - (netTaxableSubtotal / (1 + rate / 100));
       } else {
-        amount = netSubtotal * (rate / 100);
+        amount = netTaxableSubtotal * (rate / 100);
       }
       return { ...tax, amount };
     });
 
     const taxTotal = taxDetails.reduce((sum, t) => sum + t.amount, 0);
-    const total = taxDetails.some(t => t.mode === 'included')
-      ? netSubtotal
-      : netSubtotal + taxTotal;
+    const hasIncluded = taxDetails.some(t => t.mode === 'included');
+    const total = hasIncluded ? netSubtotal : netSubtotal + taxTotal;
 
     const advance = Number(quote.advance) || 0;
     const balance = total - advance;
 
     return {
       subtotal,
+      taxableSubtotal,
+      exemptSubtotal,
       globalDiscount,
       netSubtotal,
+      netTaxableSubtotal,
       taxDetails,
       taxTotal,
       total,

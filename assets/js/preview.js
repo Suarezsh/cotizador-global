@@ -27,15 +27,18 @@ const Preview = {
         </div>
         <div class="preview-doc-info">
           <h2 class="preview-title">${labels.quote}</h2>
-          <p><strong>${quote.number || ''}</strong></p>
-          <p>${labels.date}: ${Formatters.formatDate(quote.date, settings.dateFormat)}</p>
-          <p>${labels.dueDate}: ${Formatters.formatDate(quote.dueDate, settings.dateFormat)}</p>
+          <div class="preview-doc-number">${quote.number || ''}</div>
+          <div class="preview-doc-meta">
+            <span><strong>${labels.date}:</strong> ${Formatters.formatDate(quote.date, settings.dateFormat)}</span>
+            <span><strong>${labels.dueDate}:</strong> ${Formatters.formatDate(quote.dueDate, settings.dateFormat)}</span>
+          </div>
         </div>
       </header>
 
       <section class="preview-parties">
-        <div class="preview-emisor">
-          <h3>${settings.business.name || 'Emisor'}</h3>
+        <div class="preview-party-box">
+          <h3>${labels.emisor || 'De'}</h3>
+          <p class="party-name">${settings.business.name || 'Emisor'}</p>
           ${settings.business.taxId ? `<p>ID: ${settings.business.taxId}</p>` : ''}
           ${settings.business.address ? `<p>${settings.business.address}</p>` : ''}
           ${settings.business.city ? `<p>${settings.business.city}${settings.business.country ? ', ' + settings.business.country : ''}</p>` : ''}
@@ -43,9 +46,9 @@ const Preview = {
           ${settings.business.email ? `<p>${settings.business.email}</p>` : ''}
           ${settings.business.website ? `<p>${settings.business.website}</p>` : ''}
         </div>
-        <div class="preview-client">
+        <div class="preview-party-box client">
           <h3>${labels.client}</h3>
-          <p><strong>${client.name || ''}</strong></p>
+          <p class="party-name">${client.name || ''}</p>
           ${client.taxId ? `<p>ID: ${client.taxId}</p>` : ''}
           ${client.address ? `<p>${client.address}</p>` : ''}
           ${client.contact ? `<p>${client.contact}</p>` : ''}
@@ -54,39 +57,44 @@ const Preview = {
         </div>
       </section>
 
-      <table class="preview-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>${labels.description}</th>
-            <th>${labels.quantity}</th>
-            <th>${labels.price}</th>
-            ${calc.globalDiscount > 0 ? `<th>${labels.discount}</th>` : ''}
-            <th>${labels.total}</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${quote.items.map((item, idx) => `
+      <div class="preview-table-wrap">
+        <table class="preview-table">
+          <thead>
             <tr>
-              <td>${idx + 1}</td>
-              <td>${item.description || ''}<br><small>${item.type === 'service' ? 'Servicio' : 'Producto'} / ${item.unit || ''}</small></td>
-              <td>${item.quantity || 0}</td>
-              <td>${Formatters.formatMoney(item.price, currency)}</td>
-              ${calc.globalDiscount > 0 ? `<td>${item.discount || 0}%</td>` : ''}
-              <td>${Formatters.formatMoney(Calculations.itemTotal(item), currency)}</td>
+              <th class="col-num">#</th>
+              <th class="col-desc">${labels.description}</th>
+              <th class="col-qty">${labels.quantity}</th>
+              <th class="col-price">${labels.price}</th>
+              ${calc.globalDiscount > 0 ? `<th class="col-disc">${labels.discount}</th>` : ''}
+              <th class="col-total">${labels.total}</th>
             </tr>
-          `).join('')}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            ${quote.items.map((item, idx) => `
+              <tr>
+                <td class="col-num">${idx + 1}</td>
+                <td class="col-desc">
+                  ${item.description || ''}
+                  <span class="preview-item-type">${item.type === 'service' ? 'Servicio' : 'Producto'} / ${item.unit || ''}${item.taxable === false ? ' — Exento' : ''}</span>
+                </td>
+                <td class="col-qty">${item.quantity || 0}</td>
+                <td class="col-price">${Formatters.formatMoney(item.price, currency)}</td>
+                ${calc.globalDiscount > 0 ? `<td class="col-disc">${item.discount || 0}%</td>` : ''}
+                <td class="col-total">${Formatters.formatMoney(Calculations.itemTotal(item), currency)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
 
       <section class="preview-totals">
         <div class="preview-totals-row"><span>${labels.subtotal}</span><span>${Formatters.formatMoney(calc.subtotal, currency)}</span></div>
-        ${calc.globalDiscount > 0 ? `<div class="preview-totals-row"><span>${labels.globalDiscount}</span><span>-${Formatters.formatMoney(calc.globalDiscount, currency)}</span></div>` : ''}
+        ${calc.globalDiscount > 0 ? `<div class="preview-totals-row discount"><span>${labels.globalDiscount}</span><span>-${Formatters.formatMoney(calc.globalDiscount, currency)}</span></div>` : ''}
         ${calc.taxDetails.map(t => `<div class="preview-totals-row"><span>${t.name} (${t.rate}%)</span><span>${Formatters.formatMoney(t.amount, currency)}</span></div>`).join('')}
-        <div class="preview-totals-row preview-grand-total"><span>${labels.finalTotal}</span><span>${Formatters.formatMoney(calc.total, currency)}</span></div>
+        <div class="preview-grand-total"><span>${labels.finalTotal}</span><span>${Formatters.formatMoney(calc.total, currency)}</span></div>
         ${calc.advance > 0 ? `
           <div class="preview-totals-row"><span>${labels.advance}</span><span>${Formatters.formatMoney(calc.advance, currency)}</span></div>
-          <div class="preview-totals-row"><span>${labels.balance}</span><span>${Formatters.formatMoney(calc.balance, currency)}</span></div>
+          <div class="preview-totals-row balance"><span>${labels.balance}</span><span>${Formatters.formatMoney(calc.balance, currency)}</span></div>
         ` : ''}
       </section>
 

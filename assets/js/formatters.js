@@ -28,6 +28,7 @@ const Formatters = {
   labels: {
     es: {
       quote: 'COTIZACIÓN',
+      emisor: 'De',
       date: 'Fecha',
       dueDate: 'Vencimiento',
       client: 'Cliente',
@@ -48,6 +49,7 @@ const Formatters = {
     },
     en: {
       quote: 'QUOTE',
+      emisor: 'From',
       date: 'Date',
       dueDate: 'Due date',
       client: 'Client',
@@ -68,6 +70,7 @@ const Formatters = {
     },
     pt: {
       quote: 'ORÇAMENTO',
+      emisor: 'De',
       date: 'Data',
       dueDate: 'Vencimento',
       client: 'Cliente',
@@ -88,6 +91,7 @@ const Formatters = {
     },
     fr: {
       quote: 'DEVIS',
+      emisor: 'De',
       date: 'Date',
       dueDate: 'Échéance',
       client: 'Client',

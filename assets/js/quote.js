@@ -1,13 +1,18 @@
 const QuotePanel = {
   init() {
     this.bindEvents();
-    AppState.subscribe(() => this.renderTotals());
+    this.lastItemsSnapshot = '';
+    AppState.subscribe(() => {
+      const currentSnapshot = AppState.currentQuote.items.map(i => `${i.id}:${i.taxable !== false ? '1' : '0'}`).join(',');
+      if (currentSnapshot !== this.lastItemsSnapshot) {
+        this.lastItemsSnapshot = currentSnapshot;
+        this.renderItems();
+      }
+      this.renderTotals();
+    });
   },
 
   bindEvents() {
-    document.getElementById('tab-quote').addEventListener('click', () => App.setTab('quote'));
-    document.getElementById('btn-tab-quote').addEventListener('click', () => App.setTab('quote'));
-
     document.getElementById('quote-number').addEventListener('input', (e) => {
       AppState.updateCurrentQuote({ number: e.target.value });
     });
@@ -30,13 +35,20 @@ const QuotePanel = {
       AppState.updateCurrentQuote({ notes: e.target.value });
     });
 
+    document.getElementById('quote-apply-tax-all').addEventListener('change', (e) => {
+      const apply = e.target.checked;
+      AppState.currentQuote.items.forEach(item => {
+        AppState.updateItem(item.id, { taxable: apply });
+      });
+    });
+
     document.getElementById('btn-add-item').addEventListener('click', () => {
-      AppState.addItem({ description: '', type: 'service', unit: 'unidad', quantity: 1, price: 0, discount: 0 });
+      AppState.addItem({ description: '', type: 'service', unit: 'unidad', quantity: 1, price: 0, discount: 0, taxable: true });
     });
 
     document.getElementById('btn-save-quote').addEventListener('click', () => {
       AppState.saveCurrentQuote();
-      alert('Cotización guardada');
+      App.showAlert('Cotización guardada correctamente', { title: 'Guardado', icon: 'fa-check', color: 'green' });
     });
 
     document.getElementById('btn-duplicate-quote').addEventListener('click', () => {
@@ -53,35 +65,47 @@ const QuotePanel = {
 
     document.getElementById('btn-load-quote').addEventListener('click', () => this.showSavedQuotes());
 
-    ['input', 'change'].forEach(evt => {
-      document.getElementById('quote-items').addEventListener(evt, (e) => {
-        const row = e.target.closest('[data-item-id]');
-        if (!row) return;
-        const id = row.dataset.itemId;
-        const fieldMap = {
-          'item-description': 'description',
-          'item-type': 'type',
-          'item-unit': 'unit',
-          'item-quantity': 'quantity',
-          'item-price': 'price',
-          'item-discount': 'discount'
-        };
-        const field = fieldMap[e.target.className.split(' ').find(c => fieldMap[c])];
-        if (field) {
-          AppState.updateItem(id, { [field]: e.target.value });
-        }
-      });
+    document.getElementById('quote-items').addEventListener('change', (e) => {
+      const row = e.target.closest('[data-item-id]');
+      if (!row) return;
+      const id = row.dataset.itemId;
+      const fieldMap = {
+        'item-description': 'description',
+        'item-type': 'type',
+        'item-unit': 'unit',
+        'item-quantity': 'quantity',
+        'item-price': 'price',
+        'item-discount': 'discount'
+      };
+      const field = fieldMap[e.target.className.split(' ').find(c => fieldMap[c])];
+      if (field) {
+        AppState.updateItem(id, { [field]: e.target.value });
+      }
     });
 
     document.getElementById('quote-items').addEventListener('click', (e) => {
-      if (e.target.classList.contains('btn-remove-item')) {
-        AppState.removeItem(e.target.dataset.id);
+      const removeBtn = e.target.closest('.btn-remove-item');
+      const upBtn = e.target.closest('.btn-move-up');
+      const downBtn = e.target.closest('.btn-move-down');
+      const taxBtn = e.target.closest('.btn-toggle-tax');
+
+      if (removeBtn) {
+        App.showConfirm('¿Eliminar este ítem?', () => AppState.removeItem(removeBtn.dataset.id));
       }
-      if (e.target.classList.contains('btn-move-up')) {
-        AppState.moveItem(e.target.dataset.id, 'up');
+      if (upBtn) {
+        AppState.moveItem(upBtn.dataset.id, 'up');
       }
-      if (e.target.classList.contains('btn-move-down')) {
-        AppState.moveItem(e.target.dataset.id, 'down');
+      if (downBtn) {
+        AppState.moveItem(downBtn.dataset.id, 'down');
+      }
+      if (taxBtn) {
+        const row = taxBtn.closest('[data-item-id]');
+        if (row) {
+          const item = AppState.currentQuote.items.find(i => i.id === row.dataset.itemId);
+          if (item) {
+            AppState.updateItem(row.dataset.itemId, { taxable: item.taxable === false ? true : false });
+          }
+        }
       }
     });
   },
@@ -95,6 +119,12 @@ const QuotePanel = {
     document.getElementById('quote-global-discount').value = q.globalDiscount || '';
     document.getElementById('quote-advance').value = q.advance || '';
     document.getElementById('quote-notes').value = q.notes || '';
+
+    const taxAllCheckbox = document.getElementById('quote-apply-tax-all');
+    if (taxAllCheckbox) {
+      const allTaxable = q.items.length > 0 && q.items.every(item => item.taxable !== false);
+      taxAllCheckbox.checked = allTaxable;
+    }
 
     this.renderClientOptions();
     this.renderItems();
@@ -111,29 +141,61 @@ const QuotePanel = {
 
   renderItems() {
     const container = document.getElementById('quote-items');
+
+    // Guardar foco activo para restaurarlo tras renderizar
+    const active = document.activeElement;
+    const activeRow = active ? active.closest('[data-item-id]') : null;
+    const activeItemId = activeRow ? activeRow.dataset.itemId : null;
+    const activeField = active ? Array.from(active.classList).find(c => c.startsWith('item-')) : null;
+    const activeSelectionStart = active ? active.selectionStart : null;
+    const activeSelectionEnd = active ? active.selectionEnd : null;
+
     container.innerHTML = AppState.currentQuote.items.map((item, index) => `
-      <div data-item-id="${item.id}" class="bg-gray-50 p-3 rounded space-y-2">
+      <div data-item-id="${item.id}" class="bg-gray-50 p-2 rounded-lg border border-gray-100 space-y-1.5">
         <div class="flex justify-between items-center">
-          <span class="text-xs font-semibold text-gray-500">#${index + 1}</span>
-          <div class="space-x-2">
-            <button data-id="${item.id}" class="btn-move-up text-gray-500 hover:text-gray-700 text-sm">↑</button>
-            <button data-id="${item.id}" class="btn-move-down text-gray-500 hover:text-gray-700 text-sm">↓</button>
-            <button data-id="${item.id}" class="btn-remove-item text-red-500 hover:text-red-700 text-sm">Eliminar</button>
+          <span class="text-xs font-bold text-gray-500 uppercase tracking-wide">#${index + 1}</span>
+          <div class="flex items-center gap-0.5">
+            <button data-id="${item.id}" class="btn-toggle-tax ${item.taxable === false ? 'text-amber-500 bg-amber-50' : 'text-green-600 bg-green-50'} p-1 rounded transition text-xs" title="${item.taxable === false ? 'Exento de impuesto' : 'Aplica impuesto'}">
+              <i class="fa-solid ${item.taxable === false ? 'fa-ban' : 'fa-receipt'}"></i>
+            </button>
+            <button data-id="${item.id}" class="btn-move-up text-gray-500 hover:text-blue-600 hover:bg-blue-50 p-1 rounded transition text-xs" title="Mover arriba">
+              <i class="fa-solid fa-chevron-up"></i>
+            </button>
+            <button data-id="${item.id}" class="btn-move-down text-gray-500 hover:text-blue-600 hover:bg-blue-50 p-1 rounded transition text-xs" title="Mover abajo">
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <button data-id="${item.id}" class="btn-remove-item text-red-500 hover:text-red-700 hover:bg-red-50 p-1 rounded transition text-xs" title="Eliminar">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
           </div>
         </div>
-        <input type="text" class="item-description input w-full text-sm" placeholder="Descripción" value="${item.description || ''}">
-        <div class="grid grid-cols-5 gap-2">
-          <select class="item-type input text-sm">
+        <input type="text" class="item-description input input-compact w-full" placeholder="Descripción" value="${item.description || ''}">
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
+          <select class="item-type input input-compact">
             <option value="product" ${item.type === 'product' ? 'selected' : ''}>Producto</option>
             <option value="service" ${item.type === 'service' ? 'selected' : ''}>Servicio</option>
           </select>
-          <input type="text" class="item-unit input text-sm" placeholder="Unidad" value="${item.unit || ''}">
-          <input type="number" class="item-quantity input text-sm" placeholder="Cant." value="${item.quantity || ''}" step="0.01">
-          <input type="number" class="item-price input text-sm" placeholder="Precio" value="${item.price || ''}" step="0.01">
-          <input type="number" class="item-discount input text-sm" placeholder="Desc.%" value="${item.discount || ''}" step="0.01">
+          <input type="text" class="item-unit input input-compact" placeholder="Unidad" value="${item.unit || ''}">
+          <input type="number" class="item-quantity input input-compact" placeholder="Cant." value="${item.quantity || ''}" step="0.01">
+          <input type="number" class="item-price input input-compact" placeholder="Precio" value="${item.price || ''}" step="0.01">
+          <input type="number" class="item-discount input input-compact" placeholder="Desc.%" value="${item.discount || ''}" step="0.01">
         </div>
       </div>
     `).join('');
+
+    // Restaurar foco si el ítem aún existe
+    if (activeItemId && activeField) {
+      const newRow = container.querySelector(`[data-item-id="${activeItemId}"]`);
+      const newInput = newRow ? newRow.querySelector(`.${activeField}`) : null;
+      if (newInput) {
+        newInput.focus();
+        if (typeof activeSelectionStart === 'number' && typeof activeSelectionEnd === 'number') {
+          try {
+            newInput.setSelectionRange(activeSelectionStart, activeSelectionEnd);
+          } catch (e) {}
+        }
+      }
+    }
   },
 
   renderTotals() {
@@ -176,18 +238,12 @@ const QuotePanel = {
 
   shareLink() {
     const link = App.generateShareLink();
-    navigator.clipboard.writeText(link).then(() => alert('Enlace copiado al portapapeles'));
+    navigator.clipboard.writeText(link).then(() => {
+      App.showAlert('Enlace copiado al portapapeles', { title: 'Copiado', icon: 'fa-link', color: 'blue' });
+    });
   },
 
   showSavedQuotes() {
-    if (!AppState.savedQuotes.length) {
-      alert('No hay cotizaciones guardadas');
-      return;
-    }
-    const list = AppState.savedQuotes.map((q, i) => `${i + 1}. ${q.number} - ${q.savedAt ? new Date(q.savedAt).toLocaleString() : ''}`).join('\n');
-    const idx = prompt(`Elige una cotización:\n${list}`);
-    if (idx && AppState.savedQuotes[Number(idx) - 1]) {
-      AppState.loadSavedQuote(AppState.savedQuotes[Number(idx) - 1].savedId);
-    }
+    App.showSavedQuotes();
   }
 };
