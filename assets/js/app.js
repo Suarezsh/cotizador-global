@@ -13,7 +13,8 @@ const App = {
   loadFromHash() {
     if (window.location.hash && window.location.hash.length > 1) {
       try {
-        const data = JSON.parse(atob(decodeURIComponent(window.location.hash.slice(1))));
+        const json = decodeURIComponent(atob(decodeURIComponent(window.location.hash.slice(1))));
+        const data = JSON.parse(json);
         if (data.quote) {
           Storage.save(STORAGE_KEYS.currentQuote, data.quote);
         }
@@ -31,7 +32,7 @@ const App = {
       quote: AppState.currentQuote,
       settings: AppState.settings
     };
-    const hash = encodeURIComponent(btoa(JSON.stringify(data)));
+    const hash = encodeURIComponent(btoa(encodeURIComponent(JSON.stringify(data))));
     return `${window.location.origin}${window.location.pathname}#${hash}`;
   },
 
