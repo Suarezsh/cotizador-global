@@ -88,11 +88,11 @@ La aplicación está diseñada para adaptarse a cualquier moneda, impuesto, idio
 
 | Vista móvil - Cotizar | Vista móvil - Configuración | Vista previa PDF |
 |:---:|:---:|:---:|
-| ![Cotizar](https://raw.githubusercontent.com/Suarezsh/cotizador-global/main/docs/screenshots/mobile-quote.png) | ![Configuración](https://raw.githubusercontent.com/Suarezsh/cotizador-global/main/docs/screenshots/mobile-config.png) | ![PDF](https://raw.githubusercontent.com/Suarezsh/cotizador-global/main/docs/screenshots/pdf-preview.png) |
+| ![Cotizar](https://github.com/Suarezsh/cotizador-global/blob/main/docs/screenshots/mobile-quote.png?raw=true) | ![Configuración](https://github.com/Suarezsh/cotizador-global/blob/main/docs/screenshots/mobile-config.png?raw=true) | ![PDF](https://github.com/Suarezsh/cotizador-global/blob/main/docs/screenshots/pdf-preview.png?raw=true) |
 
 | Escritorio - Split view | Modal de clientes | Estilo Liquid Glass |
 |:---:|:---:|:---:|
-| ![Escritorio](https://raw.githubusercontent.com/Suarezsh/cotizador-global/main/docs/screenshots/desktop-split.png) | ![Clientes](https://raw.githubusercontent.com/Suarezsh/cotizador-global/main/docs/screenshots/modal-clients.png) | ![Liquid Glass](https://raw.githubusercontent.com/Suarezsh/cotizador-global/main/docs/screenshots/style-liquid-glass.png) |
+| ![Escritorio](https://github.com/Suarezsh/cotizador-global/blob/main/docs/screenshots/desktop-split.png?raw=true) | ![Clientes](https://github.com/Suarezsh/cotizador-global/blob/main/docs/screenshots/modal-clients.png?raw=true) | ![Liquid Glass](https://github.com/Suarezsh/cotizador-global/blob/main/docs/screenshots/style-liquid-glass.png?raw=true) |
 
 </div>
 
