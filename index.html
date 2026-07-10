@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cotizador Global</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body class="bg-gray-100 text-gray-800 h-screen overflow-hidden print:bg-white print:overflow-visible">
+
+  <!-- Navegación móvil -->
+  <nav class="print:hidden bg-white border-b border-gray-200 px-4 py-3 flex justify-between items-center md:hidden">
+    <h1 class="font-bold text-lg">Cotizador Global</h1>
+    <div class="space-x-2">
+      <button id="btn-tab-admin" class="px-3 py-1 rounded text-sm bg-blue-600 text-white">Admin</button>
+      <button id="btn-tab-quote" class="px-3 py-1 rounded text-sm bg-gray-200 text-gray-700">Cotizar</button>
+    </div>
+  </nav>
+
+  <div class="flex flex-col md:flex-row h-full md:h-screen">
+    <!-- Panel izquierdo: Admin / Cotización -->
+    <aside id="left-panel" class="w-full md:w-1/2 lg:w-5/12 h-full overflow-y-auto bg-white border-r border-gray-200 print:hidden">
+
+      <!-- Tabs escritorio -->
+      <div class="hidden md:flex border-b border-gray-200">
+        <button id="tab-admin" class="flex-1 py-3 px-4 text-sm font-semibold border-b-2 border-blue-600 text-blue-600">Administración</button>
+        <button id="tab-quote" class="flex-1 py-3 px-4 text-sm font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700">Cotización</button>
+      </div>
+
+      <!-- Panel Admin -->
+      <div id="panel-admin" class="p-6 space-y-8">
+
+        <section>
+          <h2 class="text-lg font-bold mb-4 flex items-center gap-2">🏢 Datos del emisor</h2>
+          <div class="grid grid-cols-1 gap-3">
+            <input type="text" id="admin-business-name" placeholder="Nombre del negocio" class="input">
+            <input type="text" id="admin-slogan" placeholder="Eslogan o especialidad" class="input">
+            <div class="flex items-center gap-3">
+              <input type="file" id="admin-logo-file" accept="image/*" class="text-sm">
+              <input type="text" id="admin-logo-url" placeholder="O URL del logo" class="input flex-1">
+            </div>
+            <input type="text" id="admin-phone" placeholder="Teléfono" class="input">
+            <input type="email" id="admin-email" placeholder="Correo" class="input">
+            <input type="text" id="admin-address" placeholder="Dirección" class="input">
+            <input type="text" id="admin-city" placeholder="Ciudad" class="input">
+            <input type="text" id="admin-country" placeholder="País" class="input">
+            <input type="text" id="admin-tax-id" placeholder="Identificación fiscal (RUC, NIF, etc.)" class="input">
+            <input type="text" id="admin-website" placeholder="Sitio web" class="input">
+          </div>
+        </section>
+
+        <section>
+          <h2 class="text-lg font-bold mb-4 flex items-center gap-2">👤 Clientes</h2>
+          <div class="flex gap-2 mb-3">
+            <input type="text" id="client-name" placeholder="Nombre / Razón social" class="input flex-1">
+            <button id="btn-add-client" class="btn-primary">+</button>
+          </div>
+          <div class="grid grid-cols-1 gap-2 mb-3">
+            <input type="text" id="client-address" placeholder="Dirección" class="input">
+            <input type="text" id="client-contact" placeholder="Contacto" class="input">
+            <input type="email" id="client-email" placeholder="Correo" class="input">
+            <input type="text" id="client-phone" placeholder="Teléfono" class="input">
+            <input type="text" id="client-tax-id" placeholder="ID fiscal" class="input">
+          </div>
+          <ul id="clients-list" class="space-y-2 max-h-48 overflow-y-auto"></ul>
+        </section>
+
+        <section>
+          <h2 class="text-lg font-bold mb-4 flex items-center gap-2">💱 Monedas</h2>
+          <div class="grid grid-cols-2 gap-2 mb-3">
+            <input type="text" id="currency-name" placeholder="Nombre" class="input">
+            <input type="text" id="currency-code" placeholder="Código ISO" class="input">
+            <input type="text" id="currency-symbol" placeholder="Símbolo" class="input">
+            <select id="currency-position" class="input">
+              <option value="before">Antes</option>
+              <option value="after">Después</option>
+            </select>
+            <input type="text" id="currency-thousand" placeholder="Separador miles" class="input" value=",">
+            <input type="text" id="currency-decimal" placeholder="Separador decimal" class="input" value=".">
+          </div>
+          <button id="btn-add-currency" class="btn-primary w-full mb-3">Agregar moneda</button>
+          <ul id="currencies-list" class="space-y-2 max-h-48 overflow-y-auto"></ul>
+        </section>
+
+        <section>
+          <h2 class="text-lg font-bold mb-4 flex items-center gap-2">🧾 Impuestos</h2>
+          <div class="grid grid-cols-2 gap-2 mb-3">
+            <input type="text" id="tax-name" placeholder="Nombre" class="input">
+            <input type="text" id="tax-abbreviation" placeholder="Abreviatura" class="input">
+            <input type="number" id="tax-rate" placeholder="%" class="input" step="0.01">
+            <input type="text" id="tax-id" placeholder="ID fiscal" class="input">
+          </div>
+          <select id="tax-mode" class="input mb-3">
+            <option value="added">Agregado al subtotal</option>
+            <option value="included">Incluido en el precio</option>
+          </select>
+          <button id="btn-add-tax" class="btn-primary w-full mb-3">Agregar impuesto</button>
+          <ul id="taxes-list" class="space-y-2 max-h-48 overflow-y-auto"></ul>
+        </section>
+
+        <section>
+          <h2 class="text-lg font-bold mb-4 flex items-center gap-2">📝 Términos y notas</h2>
+          <textarea id="admin-terms" rows="3" placeholder="Términos y condiciones" class="input w-full mb-3"></textarea>
+          <textarea id="admin-thanks" rows="2" placeholder="Nota de agradecimiento" class="input w-full mb-3"></textarea>
+          <textarea id="admin-footer" rows="2" placeholder="Pie de página" class="input w-full"></textarea>
+        </section>
+
+        <section>
+          <h2 class="text-lg font-bold mb-4 flex items-center gap-2">🎨 Estilo visual</h2>
+          <div class="grid grid-cols-2 gap-3 mb-3">
+            <select id="admin-language" class="input">
+              <option value="es">Español</option>
+              <option value="en">English</option>
+              <option value="pt">Português</option>
+              <option value="fr">Français</option>
+            </select>
+            <select id="admin-date-format" class="input">
+              <option value="DD/MM/YYYY">DD/MM/AAAA</option>
+              <option value="MM/DD/YYYY">MM/DD/AAAA</option>
+              <option value="YYYY-MM-DD">AAAA-MM-DD</option>
+            </select>
+            <input type="text" id="admin-doc-prefix" placeholder="Prefijo doc." class="input" value="COT-">
+            <input type="color" id="admin-accent-color" class="input h-10 p-1" value="#2563eb">
+            <select id="admin-visual-style" class="input col-span-2">
+              <option value="classic">Clásico</option>
+              <option value="modern">Moderno</option>
+              <option value="minimalist">Minimalista</option>
+              <option value="maximalist">Maximalista</option>
+              <option value="brutalist">Brutalista</option>
+              <option value="skeuomorphism">Skeuomorfismo / Clasmorfismo</option>
+              <option value="claymorphism">Claymorfismo</option>
+              <option value="liquid-glass">Liquid Glass</option>
+              <option value="spatial">UI Espacial</option>
+            </select>
+          </div>
+        </section>
+
+        <section class="pt-4 border-t border-gray-200">
+          <button id="btn-backup" class="btn-secondary w-full mb-2">Descargar respaldo JSON</button>
+          <label class="btn-secondary w-full block text-center cursor-pointer">
+            Cargar respaldo JSON
+            <input type="file" id="btn-restore" accept=".json" class="hidden">
+          </label>
+        </section>
+
+      </div>
+
+      <!-- Panel Cotización -->
+      <div id="panel-quote" class="p-6 space-y-6 hidden">
+
+        <section>
+          <h2 class="text-lg font-bold mb-4">📄 Cotización</h2>
+          <div class="grid grid-cols-1 gap-3">
+            <input type="text" id="quote-number" placeholder="Número" class="input">
+            <div class="grid grid-cols-2 gap-2">
+              <input type="date" id="quote-date" class="input">
+              <input type="date" id="quote-due-date" class="input">
+            </div>
+            <select id="quote-client" class="input">
+              <option value="">Seleccionar cliente</option>
+            </select>
+            <input type="number" id="quote-global-discount" placeholder="Descuento global %" class="input" step="0.01">
+            <input type="number" id="quote-advance" placeholder="Anticipo" class="input" step="0.01">
+          </div>
+        </section>
+
+        <section>
+          <div class="flex justify-between items-center mb-3">
+            <h2 class="text-lg font-bold">Ítems</h2>
+            <button id="btn-add-item" class="btn-primary">+ Agregar ítem</button>
+          </div>
+          <div id="quote-items" class="space-y-3"></div>
+        </section>
+
+        <section>
+          <h2 class="text-lg font-bold mb-2">Totales</h2>
+          <div id="quote-totals" class="bg-gray-50 p-4 rounded-lg space-y-1 text-sm"></div>
+        </section>
+
+        <section>
+          <textarea id="quote-notes" rows="3" placeholder="Notas adicionales" class="input w-full"></textarea>
+        </section>
+
+        <section class="grid grid-cols-2 gap-2">
+          <button id="btn-save-quote" class="btn-secondary">Guardar</button>
+          <button id="btn-load-quote" class="btn-secondary">Cargar</button>
+          <button id="btn-duplicate-quote" class="btn-secondary">Duplicar</button>
+          <button id="btn-share-whatsapp" class="btn-secondary">WhatsApp</button>
+          <button id="btn-share-email" class="btn-secondary">Correo</button>
+          <button id="btn-export-pdf" class="btn-primary col-span-2">Exportar PDF</button>
+        </section>
+
+      </div>
+
+    </aside>
+
+    <!-- Panel derecho: Vista previa A4 -->
+    <main class="flex-1 bg-gray-200 p-4 md:p-8 overflow-y-auto print:bg-white print:p-0">
+      <div id="a4-preview" class="a4-sheet mx-auto bg-white shadow-lg print:shadow-none print:m-0">
+        <!-- Contenido dinámico -->
+      </div>
+    </main>
+
+  </div>
+
+  <script src="assets/js/defaults.js"></script>
+  <script src="assets/js/formatters.js"></script>
+  <script src="assets/js/calculations.js"></script>
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/state.js"></script>
+  <script src="assets/js/preview.js"></script>
+  <script src="assets/js/admin.js"></script>
+  <script src="assets/js/quote.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
