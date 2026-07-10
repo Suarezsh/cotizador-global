@@ -83,6 +83,10 @@ La aplicación está diseñada para adaptarse a cualquier moneda, impuesto, idio
 ---
 
 ## Capturas de pantalla
+<img width="2307" height="1269" alt="image" src="https://github.com/user-attachments/assets/94630565-83d4-46d9-9548-3a42d493080a" />
+<img width="390" height="797" alt="image" src="https://github.com/user-attachments/assets/005f8df2-dfd8-4b92-86d6-d71315db477f" />
+
+
 
 <div align="center">
 
