@@ -1,0 +1,200 @@
+======================================================================
+REQUERIMIENTOS: COTIZADOR GLOBAL AUTOMATIZADO (VANILLA JS & TAILWIND)
+======================================================================
+
+1. DESCRIPCIÓN DEL PROYECTO
+----------------------------------------------------------------------
+Aplicación web estática (sin backend) que permite a cualquier profesional,
+freelancer o pequeño negocio generar cotizaciones y presupuestos en tiempo
+real, adaptables a cualquier moneda, impuesto, idioma o formato regional del
+mundo. El sistema funciona con una base de datos local basada en LocalStorage.
+TODOS los datos de la aplicación son editables: configuración global, clientes,
+monedas, impuestos, estilos visuales y cada cotización individual.
+
+
+2. ARQUITECTURA GENERAL DE LA APLICACIÓN
+----------------------------------------------------------------------
+
+La aplicación se divide en DOS MÓDULOS PRINCIPALES:
+
+   A. PANEL DE ADMINISTRACIÓN GLOBAL (Configuración única del negocio)
+      - Es el lugar donde el usuario define TODO lo que se usará en sus cotizaciones.
+      - Los datos ingresados aquí se guardan automáticamente en LocalStorage.
+      - Al abrir el cotizador, estos datos globales se cargan como valores por defecto.
+      - El usuario administra: emisor, clientes, monedas, impuestos, términos
+        y preferencias visuales del documento.
+      - TODOS los datos globales son editables en cualquier momento.
+
+   B. PANEL DE COTIZACIÓN RÁPIDA (Creación de cotizaciones individuales)
+      - Aquí el usuario solo completa los datos específicos de cada cotización:
+        cliente, número de documento, fechas, ítems, descuentos y notas adicionales.
+      - Toda la configuración global (moneda, impuestos, logo, datos del emisor,
+        términos, etc.) ya viene precargada desde LocalStorage.
+      - La experiencia está diseñada para cotizar rápido sin tener que configurar nada.
+
+
+3. REQUERIMIENTOS FUNCIONALES DEL PANEL DE ADMINISTRACIÓN GLOBAL
+----------------------------------------------------------------------
+
+   A. Datos del Emisor (Negocio o Profesional)
+      - Nombre del negocio o profesional.
+      - Logo: campo para pegar URL o subir imagen local (almacenada como Base64).
+      - Eslogan o especialidad opcional.
+      - Campos de contacto: teléfono, correo electrónico, dirección, ciudad, país.
+      - Número de identificación fiscal opcional (RUC, NIF, VAT ID, GSTIN, EIN, etc.).
+      - Sitio web y redes sociales opcionales.
+
+   B. Gestión de Clientes
+      - CRUD completo de clientes (crear, editar, eliminar, buscar).
+      - Cada cliente debe almacenar: nombre/razón social, dirección, contacto,
+        correo, teléfono e identificación fiscal si aplica.
+      - Posibilidad de seleccionar un cliente previamente guardado al crear una cotización.
+
+   C. Gestión de Monedas Globales
+      - CRUD de monedas personalizadas.
+      - Cada moneda incluye: nombre, código ISO (USD, EUR, PEN, MXN, etc.), símbolo
+        ($, €, S/, £, ¥), separador de miles, separador decimal y posición del
+        símbolo (antes o después del monto).
+      - Ejemplos precargados: Dólar estadounidense, Euro, Sol peruano, Peso mexicano,
+        Peso argentino, Real brasileño, Libra esterlina, Yen japonés, etc.
+      - Selección de moneda por defecto para todas las cotizaciones.
+
+   D. Gestión de Impuestos Globales
+      - CRUD de impuestos personalizados.
+      - Cada impuesto incluye: nombre (IVA, IGV, VAT, GST, Sales Tax, etc.),
+        porcentaje, abreviatura y número de identificación fiscal opcional.
+      - Permitir definir múltiples impuestos activos.
+      - Opción de impuesto incluido en el precio o agregado sobre el subtotal.
+      - Selección de impuestos por defecto para nuevas cotizaciones.
+
+   E. Términos, Condiciones y Notas por Defecto
+      - Texto editable de términos y condiciones que aparecerá por defecto en cada
+        cotización (ej: validez de la oferta, forma de pago, plazo de entrega).
+      - Nota de agradecimiento personalizable.
+      - Mensaje de pie de página opcional.
+
+   F. Preferencias del Documento y Estilo Visual
+      - Selección de idioma del documento: Español, Inglés, Portugués, Francés.
+      - Formato de fecha por región: DD/MM/AAAA, MM/DD/AAAA, AAAA-MM-DD.
+      - Prefijo y numeración automática del documento (ej: COT-001, QUO-2026-0001).
+      - Estilo visual de la hoja A4 seleccionable desde el panel admin:
+        * Clásico
+        * Moderno
+        * Minimalista
+        * Maximalista
+        * Brutalista
+        * Skeuomorfismo / Clasmorfismo
+        * Claymorfismo
+        * Liquid Glass
+        * UI Espacial
+      - Color de acento principal personalizable por el usuario.
+      - Paleta de colores sugerida según el estilo visual elegido.
+      - Logo del negocio subido por el usuario se integra automáticamente en la hoja.
+
+
+4. REQUERIMIENTOS FUNCIONALES DEL PANEL DE COTIZACIÓN RÁPIDA
+----------------------------------------------------------------------
+
+   A. Cabecera de la Cotización
+      - Número de documento automático (editable manualmente si se desea).
+      - Fecha de emisión y fecha de vencimiento con selector de calendario.
+      - Selector de cliente (cargado desde el catálogo de clientes).
+      - Datos del emisor precargados desde la configuración global.
+
+   B. Tabla Dinámica de Ítems
+      - Botón "Agregar Ítem" para insertar filas nuevas al instante.
+      - Búsqueda rápida de ítems desde el catálogo global.
+      - Cada fila contiene de forma independiente:
+        * Código/descripción del producto o servicio.
+        * Tipo y unidad de medida.
+        * Cantidad (enteros o decimales).
+        * Precio unitario.
+        * Descuento por ítem (% o monto fijo).
+        * Total por ítem (solo lectura, calculado en tiempo real).
+      - Botón para eliminar cada fila.
+      - Arrastrar y soltar para reordenar filas.
+
+   C. Motor de Cálculos Automatizados
+      - Cálculos en TIEMPO REAL ante cualquier cambio.
+      - Desglose de totales:
+        * Subtotal bruto.
+        * Descuento global opcional (% o monto).
+        * Subtotal neto.
+        * Impuestos aplicados (uno o varios, desglosados).
+        * Total final.
+        * Anticipo / pago inicial opcional.
+        * Saldo pendiente.
+      - Control de precisión matemática con .toFixed(2) en todos los resultados.
+
+   D. Acciones de Salida y Compartido
+      - "Exportar a PDF": abre la ventana de impresión nativa mostrando solo la hoja A4.
+      - "Enviar por WhatsApp": genera enlace externo con mensaje estructurado.
+      - "Enviar por correo": enlace mailto: con asunto y cuerpo predefinido.
+      - "Guardar cotización": almacena el documento completo en LocalStorage.
+      - "Duplicar cotización": crea una copia editable para reutilizar.
+      - "Descargar JSON": exporta la cotización como archivo .json.
+      - "Cargar JSON": importa una cotización previamente guardada.
+      - "Compartir enlace": genera una URL con los datos codificados para reabrir la
+        cotización en cualquier dispositivo.
+
+
+5. REQUERIMIENTOS TÉCNICOS Y ARQUITECTURA
+----------------------------------------------------------------------
+
+   A. Persistencia de Datos (LocalStorage como Base de Datos)
+      - Toda la configuración global, catálogos y cotizaciones guardadas se almacenan
+        en LocalStorage del navegador.
+      - Las claves de almacenamiento deben estar organizadas por módulo, por ejemplo:
+        * globalSettings
+        * globalClients
+        * globalCurrencies
+        * globalTaxes
+        * globalCatalog
+        * savedQuotes
+      - Implementar función de respaldo y restauración completa de la base de datos
+        LocalStorage a un archivo JSON.
+      - Detectar primera visita y cargar datos de ejemplo por defecto.
+
+   B. Estado Global en Memoria
+      - Utilizar un único objeto global en JavaScript (por ejemplo: appState) que
+        centralice toda la información.
+      - La UI siempre debe reflejar el estado actual del objeto.
+      - Cualquier cambio en un formulario debe actualizar el estado y luego renderizar
+        la vista previa, no modificar el DOM directamente.
+
+   C. Estructura y Estilos (HTML5 & Tailwind CSS)
+      - Interfaz en pantalla dividida (Split-Screen) en ordenadores:
+        * Lado izquierdo: panel de administración o de cotización (formularios).
+        * Lado derecho: simulación visual de hoja de papel A4 con fondo blanco,
+          bordes definidos y sombras, que funciona como vista previa en vivo.
+      - Diseño 100% responsivo (Mobile-First): en móviles los paneles se apilan
+        verticalmente (formularios arriba, vista previa abajo).
+      - Uso estricto de utilidades de impresión de Tailwind (`print:hidden`,
+        `print:p-0`, `print:bg-white`, etc.) para que al imprimir o exportar a PDF
+        solo se muestre la hoja A4 limpia.
+      - Tailload CSS vía CDN oficial en el <head>.
+      - Modo oscuro opcional para el panel de administración.
+
+   D. Lógica de Negocio (JavaScript Nativo / Vanilla JS)
+      - Sin frameworks ni librerías de terceros para cálculos o renderizado.
+      - Manipulación limpia del DOM con createElement y delegación de eventos.
+      - Escucha de eventos input/change para actualización en tiempo real.
+      - Funciones puras para formateo de monedas, fechas e impuestos según la
+        configuración regional seleccionada.
+      - Control de errores y validaciones visuales en formularios.
+
+
+6. FLUJO DE EXPERIENCIA DE USUARIO (UX) ESPERADO
+----------------------------------------------------------------------
+   1. El usuario ingresa por primera vez y la app le muestra datos de ejemplo
+      precargados para que entienda el funcionamiento.
+   2. El usuario accede al Panel de Administración Global y configura una sola vez
+      los datos de su negocio: emisor, logo, moneda, impuestos, clientes, catálogo,
+      términos y estilo visual de la cotización.
+   3. Todos los cambios se guardan automáticamente en LocalStorage.
+   4. Al volver al Panel de Cotización, el usuario solo elige el cliente, define
+      fechas, agrega ítems y ajusta descuentos si es necesario.
+   5. Presiona "Exportar", visualiza la hoja limpia y la guarda como PDF.
+   6. También puede compartir por WhatsApp, correo, guardar la cotización o
+      duplicarla para futuros trabajos.
+======================================================================
