@@ -88,15 +88,13 @@ La aplicación está diseñada para adaptarse a cualquier moneda, impuesto, idio
 
 | Vista móvil - Cotizar | Vista móvil - Configuración | Vista previa PDF |
 |:---:|:---:|:---:|
-| ![Cotizar](docs/screenshots/mobile-quote.svg) | ![Configuración](docs/screenshots/mobile-config.svg) | ![PDF](docs/screenshots/pdf-preview.svg) |
+| ![Cotizar](https://placehold.co/300x600/f3f4f6/6b7280?text=Vista+m%C3%B3vil+-+Cotizar) | ![Configuración](https://placehold.co/300x600/f3f4f6/6b7280?text=Vista+m%C3%B3vil+-+Configuraci%C3%B3n) | ![PDF](https://placehold.co/424x600/e5e7eb/6b7280?text=Vista+previa+PDF) |
 
 | Escritorio - Split view | Modal de clientes | Estilo Liquid Glass |
 |:---:|:---:|:---:|
-| ![Escritorio](docs/screenshots/desktop-split.svg) | ![Clientes](docs/screenshots/modal-clients.svg) | ![Liquid Glass](docs/screenshots/style-liquid-glass.svg) |
+| ![Escritorio](https://placehold.co/600x350/f3f4f6/6b7280?text=Escritorio+-+Split+view) | ![Clientes](https://placehold.co/400x300/f3f4f6/6b7280?text=Modal+de+clientes) | ![Liquid Glass](https://placehold.co/424x600/e0f2fe/4f46e5?text=Estilo+Liquid+Glass) |
 
 </div>
-
-> Nota: Las capturas de pantalla son ilustrativas. Puedes reemplazarlas por imágenes reales en la carpeta `docs/screenshots/`.
 
 ---
 
