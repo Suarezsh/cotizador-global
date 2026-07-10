@@ -3,10 +3,36 @@ const App = {
 
   init() {
     Preview.init();
+    this.loadFromHash();
     AppState.init();
     AdminPanel.init();
     QuotePanel.init();
     this.setTab('admin');
+  },
+
+  loadFromHash() {
+    if (window.location.hash && window.location.hash.length > 1) {
+      try {
+        const data = JSON.parse(atob(decodeURIComponent(window.location.hash.slice(1))));
+        if (data.quote) {
+          Storage.save(STORAGE_KEYS.currentQuote, data.quote);
+        }
+        if (data.settings) {
+          Storage.save(STORAGE_KEYS.settings, data.settings);
+        }
+      } catch (e) {
+        console.error('Error leyendo enlace:', e);
+      }
+    }
+  },
+
+  generateShareLink() {
+    const data = {
+      quote: AppState.currentQuote,
+      settings: AppState.settings
+    };
+    const hash = encodeURIComponent(btoa(JSON.stringify(data)));
+    return `${window.location.origin}${window.location.pathname}#${hash}`;
   },
 
   setTab(tab) {

@@ -130,6 +130,17 @@ const AppState = {
     this.notify();
   },
 
+  moveItem(id, direction) {
+    const items = this.currentQuote.items;
+    const idx = items.findIndex(i => i.id === id);
+    if (idx === -1) return;
+    const newIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (newIdx < 0 || newIdx >= items.length) return;
+    [items[idx], items[newIdx]] = [items[newIdx], items[idx]];
+    this.persist();
+    this.notify();
+  },
+
   saveCurrentQuote() {
     const quote = JSON.parse(JSON.stringify(this.currentQuote));
     quote.savedAt = new Date().toISOString();

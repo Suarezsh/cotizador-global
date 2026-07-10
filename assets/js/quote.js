@@ -49,6 +49,7 @@ const QuotePanel = {
 
     document.getElementById('btn-share-whatsapp').addEventListener('click', () => this.shareWhatsApp());
     document.getElementById('btn-share-email').addEventListener('click', () => this.shareEmail());
+    document.getElementById('btn-share-link').addEventListener('click', () => this.shareLink());
 
     document.getElementById('btn-load-quote').addEventListener('click', () => this.showSavedQuotes());
 
@@ -75,6 +76,12 @@ const QuotePanel = {
     document.getElementById('quote-items').addEventListener('click', (e) => {
       if (e.target.classList.contains('btn-remove-item')) {
         AppState.removeItem(e.target.dataset.id);
+      }
+      if (e.target.classList.contains('btn-move-up')) {
+        AppState.moveItem(e.target.dataset.id, 'up');
+      }
+      if (e.target.classList.contains('btn-move-down')) {
+        AppState.moveItem(e.target.dataset.id, 'down');
       }
     });
   },
@@ -108,7 +115,11 @@ const QuotePanel = {
       <div data-item-id="${item.id}" class="bg-gray-50 p-3 rounded space-y-2">
         <div class="flex justify-between items-center">
           <span class="text-xs font-semibold text-gray-500">#${index + 1}</span>
-          <button data-id="${item.id}" class="btn-remove-item text-red-500 hover:text-red-700 text-sm">Eliminar</button>
+          <div class="space-x-2">
+            <button data-id="${item.id}" class="btn-move-up text-gray-500 hover:text-gray-700 text-sm">↑</button>
+            <button data-id="${item.id}" class="btn-move-down text-gray-500 hover:text-gray-700 text-sm">↓</button>
+            <button data-id="${item.id}" class="btn-remove-item text-red-500 hover:text-red-700 text-sm">Eliminar</button>
+          </div>
         </div>
         <input type="text" class="item-description input w-full text-sm" placeholder="Descripción" value="${item.description || ''}">
         <div class="grid grid-cols-5 gap-2">
@@ -161,6 +172,11 @@ const QuotePanel = {
       `Estimado ${client ? client.name : 'cliente'},\n\nAdjunto cotización ${AppState.currentQuote.number} por un total de ${Formatters.formatMoney(calc.total, currency)}.\n\nSaludos.`
     );
     window.open(`mailto:${client ? client.email : ''}?subject=${subject}&body=${body}`, '_blank');
+  },
+
+  shareLink() {
+    const link = App.generateShareLink();
+    navigator.clipboard.writeText(link).then(() => alert('Enlace copiado al portapapeles'));
   },
 
   showSavedQuotes() {
