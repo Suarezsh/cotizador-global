@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="rgba(0,0,0,0.45)"/>
+  <rect x="40" y="40" width="320" height="220" fill="#ffffff" rx="16"/>
+  <rect x="60" y="60" width="180" height="20" rx="4" fill="#111827"/>
+  <rect x="320" y="60" width="24" height="24" rx="12" fill="#f3f4f6"/>
+  <rect x="60" y="110" width="280" height="40" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <rect x="60" y="170" width="280" height="40" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="200" y="260" text-anchor="middle" font-family="Arial" font-size="14" fill="#9ca3af">Modal de clientes</text>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="424" height="600" viewBox="0 0 424 600">
+  <defs>
+    <linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e0f2fe"/>
+      <stop offset="100%" style="stop-color:#f0e9ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="424" height="600" fill="url(#lg)"/>
+  <rect x="32" y="32" width="360" height="536" fill="rgba(255,255,255,0.4)" rx="16" stroke="rgba(255,255,255,0.6)"/>
+  <rect x="60" y="60" width="120" height="16" rx="4" fill="#4f46e5"/>
+  <rect x="60" y="140" width="140" height="80" rx="12" fill="rgba(255,255,255,0.5)" stroke="rgba(255,255,255,0.6)"/>
+  <rect x="220" y="140" width="140" height="80" rx="12" fill="rgba(255,255,255,0.5)" stroke="rgba(255,255,255,0.6)"/>
+  <rect x="60" y="250" width="300" height="120" rx="12" fill="rgba(255,255,255,0.5)" stroke="rgba(255,255,255,0.6)"/>
+  <text x="212" y="560" text-anchor="middle" font-family="Arial" font-size="14" fill="#6b7280">Estilo Liquid Glass</text>
+</svg>
