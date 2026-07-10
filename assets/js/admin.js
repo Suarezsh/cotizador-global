@@ -73,7 +73,9 @@ const AdminPanel = {
       if (e.target.files[0]) {
         Storage.importAll(e.target.files[0]).then(() => {
           AppState.init();
-          this.render();
+          AdminPanel.render();
+          QuotePanel.render();
+          Preview.render();
         });
       }
     });
