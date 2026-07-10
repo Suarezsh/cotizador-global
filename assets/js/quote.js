@@ -1,7 +1,7 @@
 const QuotePanel = {
   init() {
     this.bindEvents();
-    this.render();
+    AppState.subscribe(() => this.renderTotals());
   },
 
   bindEvents() {

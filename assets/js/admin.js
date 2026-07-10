@@ -1,7 +1,14 @@
 const AdminPanel = {
   init() {
     this.bindEvents();
+    AppState.subscribe(() => this.renderLists());
     this.render();
+  },
+
+  renderLists() {
+    this.renderClients();
+    this.renderCurrencies();
+    this.renderTaxes();
   },
 
   bindEvents() {

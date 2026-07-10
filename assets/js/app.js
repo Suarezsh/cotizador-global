@@ -2,10 +2,10 @@ const App = {
   currentTab: 'admin',
 
   init() {
+    Preview.init();
     AppState.init();
     AdminPanel.init();
     QuotePanel.init();
-    Preview.init();
     this.setTab('admin');
   },
 
