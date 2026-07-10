@@ -4,7 +4,7 @@ const Calculations = {
     const price = Number(item.price) || 0;
     const discount = Number(item.discount) || 0;
     const base = qty * price;
-    const discountAmount = discount > 0 && discount < 100 ? base * (discount / 100) : 0;
+    const discountAmount = discount > 0 && discount <= 100 ? base * (discount / 100) : 0;
     return base - discountAmount;
   },
 

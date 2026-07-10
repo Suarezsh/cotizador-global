@@ -160,7 +160,7 @@ const QuotePanel = {
     const body = encodeURIComponent(
       `Estimado ${client ? client.name : 'cliente'},\n\nAdjunto cotización ${AppState.currentQuote.number} por un total de ${Formatters.formatMoney(calc.total, currency)}.\n\nSaludos.`
     );
-    window.location.href = `mailto:${client ? client.email : ''}?subject=${subject}&body=${body}`;
+    window.open(`mailto:${client ? client.email : ''}?subject=${subject}&body=${body}`, '_blank');
   },
 
   showSavedQuotes() {
