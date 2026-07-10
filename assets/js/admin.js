@@ -8,12 +8,20 @@ const AdminPanel = {
     document.getElementById('tab-admin').addEventListener('click', () => App.setTab('admin'));
     document.getElementById('btn-tab-admin').addEventListener('click', () => App.setTab('admin'));
 
-    const businessIds = ['admin-business-name', 'admin-slogan', 'admin-phone', 'admin-email',
-      'admin-address', 'admin-city', 'admin-country', 'admin-tax-id', 'admin-website'];
-    businessIds.forEach(id => {
+    const businessIds = {
+      'admin-business-name': 'business.name',
+      'admin-slogan': 'business.slogan',
+      'admin-phone': 'business.phone',
+      'admin-email': 'business.email',
+      'admin-address': 'business.address',
+      'admin-city': 'business.city',
+      'admin-country': 'business.country',
+      'admin-tax-id': 'business.taxId',
+      'admin-website': 'business.website'
+    };
+    Object.entries(businessIds).forEach(([id, path]) => {
       document.getElementById(id).addEventListener('input', (e) => {
-        const field = id.replace('admin-', '').replace('business-', 'name');
-        AppState.updateSettings(`business.${field}`, e.target.value);
+        AppState.updateSettings(path, e.target.value);
       });
     });
 

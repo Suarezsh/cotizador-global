@@ -52,22 +52,24 @@ const QuotePanel = {
 
     document.getElementById('btn-load-quote').addEventListener('click', () => this.showSavedQuotes());
 
-    document.getElementById('quote-items').addEventListener('input', (e) => {
-      const row = e.target.closest('[data-item-id]');
-      if (!row) return;
-      const id = row.dataset.itemId;
-      const fieldMap = {
-        'item-description': 'description',
-        'item-type': 'type',
-        'item-unit': 'unit',
-        'item-quantity': 'quantity',
-        'item-price': 'price',
-        'item-discount': 'discount'
-      };
-      const field = fieldMap[e.target.className.split(' ').find(c => fieldMap[c])];
-      if (field) {
-        AppState.updateItem(id, { [field]: e.target.value });
-      }
+    ['input', 'change'].forEach(evt => {
+      document.getElementById('quote-items').addEventListener(evt, (e) => {
+        const row = e.target.closest('[data-item-id]');
+        if (!row) return;
+        const id = row.dataset.itemId;
+        const fieldMap = {
+          'item-description': 'description',
+          'item-type': 'type',
+          'item-unit': 'unit',
+          'item-quantity': 'quantity',
+          'item-price': 'price',
+          'item-discount': 'discount'
+        };
+        const field = fieldMap[e.target.className.split(' ').find(c => fieldMap[c])];
+        if (field) {
+          AppState.updateItem(id, { [field]: e.target.value });
+        }
+      });
     });
 
     document.getElementById('quote-items').addEventListener('click', (e) => {
